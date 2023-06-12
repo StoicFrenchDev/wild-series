@@ -6,11 +6,20 @@ use App\Entity\Program;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
-
+use Symfony\Component\String\Slugger\SluggerInterface;
 use Faker\Factory;
+
 class ProgramFixtures extends Fixture implements DependentFixtureInterface
 {
 
+    public function __construct(private SluggerInterface $slugger){}
+    /*private SluggerInterface $slugger;
+
+    public function __construct(SluggerInterface $slugger)
+    {
+        $this->slugger = $slugger;
+    }
+    */
     const PROGRAMS = [
         ['Title' => 'Walking dead','Synopsis' => 'Des zombies envahissent la terre', 'Country' => 'USA', 'Year' => '2011', 'Category' => 'category_Action'],
         ['Title' => 'The Mandalorian','Synopsis' => 'Les aventures du Mandalorien', 'Country' => 'USA', 'Year' => '2019', 'Category' => 'category_Aventure'],
@@ -21,17 +30,22 @@ class ProgramFixtures extends Fixture implements DependentFixtureInterface
 
     public function load(ObjectManager $manager)
     {
-        $faker = Factory::create();
         
         foreach (self::PROGRAMS as $programLine) {
             $program = new Program();
-            $program->setTitle($programLine['Title']);
-            $program->setSynopsis($programLine['Synopsis']);
-            $program->setCountry($programLine['Country']);
-            $program->setYear($programLine['Year']);
-            $program->setCategory($this->getReference($programLine['Category']));
+
+            $title = $programLine['Title'];
+            $program->setTitle($title);
+            $slug = $this->slugger->slug($title);
+            $program->setSlug($slug);
+
+            
+            $program->setSynopsis($programLine['Synopsis'])
+                    ->setCountry($programLine['Country'])
+                    ->setYear($programLine['Year'])
+                    ->setCategory($this->getReference($programLine['Category']));
             $manager->persist($program);
-            $this->addReference('program_' . $programLine['Title'], $program);
+            $this->addReference('program_' . $title, $program);
         }
 
         $manager->flush();

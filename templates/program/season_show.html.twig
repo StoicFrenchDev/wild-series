@@ -7,11 +7,12 @@
 <h2>Résumé: {{ season.description }}</h2>
 <h3>Liste des épisodes</h3>
 <ul>
-{% for episode in episodes %}
+{% for episode in season.episodes %}
 <p>Episode: {{ episode.number }} - {{ episode.title }}</p>
 <p>synopsis: {{ episode.synopsis }}</p>
+<a  href="{{ path("program_episode_show", { slug: program.slug ,  season: season.id, episode: episode.id }) }}" >Voir épisode</a>
 {% endfor %}
 </ul>
 
-<a href="{{ path("program_show", { id: program.id }) }}">Retour à la série</a>
+<a class="btn btn-secondary m-0" href="{{ path("program_show", { slug: program.slug }) }}">Retour à la série</a>
 {% endblock %}

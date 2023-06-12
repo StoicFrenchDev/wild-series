@@ -3,18 +3,31 @@
 {% block title %}Nos séries{% endblock %}
 
 {% block body %}
+<main class="container">
+{{ app.session.get('total') }}
     <h1>Toutes les séries de la table program : </h1>
-    {% for program in programs %}
-        <div>
-            <h2>{{ loop.index }} / {{ program.title }} - Catégorie : {{ program.category.name }}</h2>
-            <p>{{ program.synopsis }}</p>
-            <a href="{{ path("program_show", { id: program.id }) }}">Voir la fiche</a>
+    <div class="container my-5  ">
+        <div class="row row-cols-1 row-cols-md-2 justify-content-center   row-cols-xl-3 g-4 mx-4">
+        {% for program in programs %}
+            <div class="col">
+                <div class="card h-100 shadow-lg p-2">
+                    <div class="card-body">
+                        <h2 class="card-title">{{ loop.index }} / {{ program.title }} </h2> 
+                        <h3 class="card-title">Catégorie : {{ program.category.name }}</h3>
+                        <p class="card-text fs-6 fw-light ">{{ program.synopsis }}</p>
+                        <a href="{{ path("program_show", { slug: program.slug }) }}" class="btn btn-primary m-0">Voir la fiche</a>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            Aucune série trouvée.
+        {% endfor %}
         </div>
-    {% else %}
-        Aucune série trouvée.
-    {% endfor %}
+    </div>
 
-    <a href="{{ path('app_index') }}">
+    <a class="btn btn-secondary m-0" href="{{ path('app_index') }}">
         Retour à l'accueil
     </a>
+
+</main>
 {% endblock %}

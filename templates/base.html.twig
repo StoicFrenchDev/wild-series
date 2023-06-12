@@ -12,10 +12,11 @@
         {% block javascripts %}
             {{ encore_entry_script_tags('app') }}
         {% endblock %}
+        <link rel="icon" href="{{ asset('build/images/favicon.ico') }}" />
     </head>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
-          <a class="navbar-brand" href="{{ path('app_index') }}">Wild-Series</a>
+          <a class="navbar-brand" href="{{ path('app_index') }}">Marmi-Wild-Series</a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -29,6 +30,12 @@
               </li>
               <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="{{ path('program_index') }}">Séries</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{{ path('season_index') }}">Saisons</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{{ path('episode_index') }}">Episodes</a>
               </li>
 
               <li class="nav-item dropdown">
@@ -47,11 +54,30 @@
               <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
               <button class="btn btn-outline-success" type="submit">Search</button>
             </form>
+
+            {% if app.user %}
+
+            {{ app.user.email }}
+            <a href="{{ path('app_logout') }}"> Se déconnecter</a>
+          {% else %}
+            <a href="{{ path('app_login') }}"> Se connecter</a>
+
+            {% endif %}
+
           </div>
         </div>
       </nav>
     </header>
-    <body>
+    <body  {{ stimulus_controller('symfony/ux-swup/swup') }} >
+      {% for category, messages in app.flashes %}
+        {% for message in messages %}
+          <div class="alert alert-{{ category }}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endfor %}
+      <div id="swup">
         {% block body %}{% endblock %}
+      </div>
     </body>
 </html>
