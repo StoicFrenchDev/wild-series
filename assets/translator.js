@@ -12,5 +12,5 @@ import { localeFallbacks } from '../var/translations/configuration';
 
 setLocaleFallbacks(localeFallbacks);
 
-export { trans };
+export { trans, setLocale };
 export * from '../var/translations';
